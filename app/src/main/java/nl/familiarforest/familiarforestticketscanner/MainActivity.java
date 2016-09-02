@@ -2,13 +2,18 @@ package nl.familiarforest.familiarforestticketscanner;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -28,13 +33,26 @@ public class MainActivity extends AppCompatActivity {
 
     TextView firstnameField,lastnameField,taskField,transactionField,codeField,errorField,birthdayField;
     Toolbar toolbar;
+    Window window;
+    String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        url = sharedPref.getString(SettingsActivity.PREF_URL, "");
+
+
+        window = this.getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
         firstnameField = (TextView)findViewById(R.id.firstnameField);
         lastnameField = (TextView)findViewById(R.id.lastnameField);
         birthdayField = (TextView)findViewById(R.id.birthdayField);
@@ -42,6 +60,23 @@ public class MainActivity extends AppCompatActivity {
         transactionField = (TextView)findViewById(R.id.transactionField);
         codeField = (TextView)findViewById(R.id.codeField);
         errorField = (TextView)findViewById(R.id.errorField);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            Intent intent = new Intent(getApplicationContext(),SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void scanTicket(View v) {
@@ -57,7 +92,8 @@ public class MainActivity extends AppCompatActivity {
             String status = obj.getString("status");
             errorField.setText(status);
             if( status.equals("ERR") ){
-                toolbar.setBackground(new ColorDrawable(Color.RED));
+                toolbar.setBackground(new ColorDrawable(getResources().getColor(R.color.colorRoyalRed)));
+                window.setStatusBarColor(getResources().getColor(R.color.colorRoyalRed));
                 firstnameField.setText("");
                 lastnameField.setText("");
                 birthdayField.setText("");
@@ -67,9 +103,11 @@ public class MainActivity extends AppCompatActivity {
                 errorField.setText(String.format("Error: %s", obj.getString("message")));
             } else if ( status.equals("WARN") || status.equals("OK")){
                 if( status.equals("WARN") ) {
-                    toolbar.setBackground(new ColorDrawable(Color.YELLOW));
+                    toolbar.setBackground(new ColorDrawable(getResources().getColor(R.color.colorBananaYellow)));
+                    window.setStatusBarColor(getResources().getColor(R.color.colorBananaYellow));
                 } else if( status.equals("OK") ) {
-                    toolbar.setBackground(new ColorDrawable(Color.BLUE));
+                    toolbar.setBackground(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
+                    window.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
                 }
                 firstnameField.setText(obj.getString("firstname"));
                 lastnameField.setText(obj.getString("lastname"));
@@ -96,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
 
                 // Instantiate the RequestQueue.
                 final RequestQueue queue = Volley.newRequestQueue(this);
-                String url ="http://stichtingfamiliarforest.nl/verifyticket.php";
 
                 // Request a string response from the provided URL.
                 final StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -122,5 +159,11 @@ public class MainActivity extends AppCompatActivity {
                 queue.add(stringRequest);
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        url = PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.PREF_URL, "");
     }
 }

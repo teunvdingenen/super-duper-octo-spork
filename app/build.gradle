@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "nl.familiarforest.familiarforestticketscanner"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -26,4 +26,5 @@ dependencies {
     compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'org.json:json:20160810'
+    compile 'com.android.support:support-v4:24.2.0'
 }

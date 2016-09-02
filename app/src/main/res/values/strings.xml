@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Familiar Forest Ticket Scanner</string>
     <string name="scan_button">Scannen</string>
+    <string name="action_settings">Opties</string>
+
+    <string name="pref_url">API URL</string>
+    <string name="pref_url_summ">Url naar API</string>
+
 </resources>
