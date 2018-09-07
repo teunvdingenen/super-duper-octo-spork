@@ -1,9 +1,7 @@
 package nl.familiarforest.familiarforestticketscanner;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -31,7 +29,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView firstnameField,lastnameField,taskField,transactionField,codeField,errorField,birthdayField;
+    TextView firstnameField,lastnameField,taskField,taskTimeField,transactionField,codeField,errorField,birthdayField;
     Toolbar toolbar;
     Window window;
     String url;
@@ -57,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         lastnameField = (TextView)findViewById(R.id.lastnameField);
         birthdayField = (TextView)findViewById(R.id.birthdayField);
         taskField = (TextView)findViewById(R.id.taskField);
+        taskTimeField = (TextView)findViewById(R.id.taskTimeField);
         transactionField = (TextView)findViewById(R.id.transactionField);
         codeField = (TextView)findViewById(R.id.codeField);
         errorField = (TextView)findViewById(R.id.errorField);
@@ -98,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 lastnameField.setText("");
                 birthdayField.setText("");
                 taskField.setText("");
+                taskTimeField.setText("");
                 transactionField.setText("");
                 codeField.setText("");
                 errorField.setText(String.format("Error: %s", obj.getString("message")));
@@ -109,13 +109,24 @@ public class MainActivity extends AppCompatActivity {
                     toolbar.setBackground(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
                     window.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
                 }
-                firstnameField.setText(obj.getString("firstname"));
-                lastnameField.setText(obj.getString("lastname"));
-                birthdayField.setText(obj.getString("birthdate"));
-                taskField.setText(obj.getString("task"));
-                transactionField.setText(obj.getString("id"));
-                codeField.setText(obj.getString("code"));
-                errorField.setText(obj.getString("message"));
+                if( obj.has("firstname"))
+                    firstnameField.setText(obj.getString("firstname"));
+                if( obj.has("lastname"))
+                    lastnameField.setText(obj.getString("lastname"));
+                if( obj.has("birthdate"))
+                    birthdayField.setText(obj.getString("birthdate"));
+                if( obj.has("task"))
+                    taskField.setText(obj.getString("task"));
+                if( obj.has("startdate") && obj.has("enddate")) {
+                    String dateString = obj.getString("startdate") + " - " + obj.getString("enddate");
+                    taskTimeField.setText(dateString);
+                }
+                if( obj.has("transactionid"))
+                    transactionField.setText(obj.getString("transactionid"));
+                if( obj.has("code"))
+                    codeField.setText(obj.getString("code"));
+                if( obj.has("message"))
+                    errorField.setText(obj.getString("message"));
             }
         } catch( JSONException e ) {
             errorField.setText(e.toString());

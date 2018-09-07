@@ -4,5 +4,5 @@
         android:key="pref_url"
         android:title="@string/pref_url"
         android:summary="@string/pref_url_summ"
-        android:defaultValue="http://stichtingfamiliarforest.nl/ticket.php" />
+        android:defaultValue="https://stichtingfamiliarforest.nl/verifyticket.php" />
 </PreferenceScreen>

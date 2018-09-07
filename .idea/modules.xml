@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/FamiliarForestTicketScanner.iml" filepath="$PROJECT_DIR$/FamiliarForestTicketScanner.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/super-duper-octo-spork.iml" filepath="$PROJECT_DIR$/super-duper-octo-spork.iml" />
     </modules>
   </component>
 </project>
